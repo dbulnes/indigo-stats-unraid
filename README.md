@@ -4,6 +4,14 @@
 
 [![Validate Unraid metadata](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml/badge.svg)](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/docs/screenshot_overview.png" alt="Indigo Stats Overview Dashboard" width="800"/>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/docs/screenshot_history.png" alt="Indigo Stats History & Telemetry" width="800"/>
+</p>
+
 Indigo Stats is a private air-quality and weather dashboard for a PurpleAir sensor on your local network. It collects readings every minute, keeps long-term history on your Unraid server, and presents current conditions and trends in a responsive web app that can be installed as a PWA.
 
 This repository provides the Unraid Community Applications package. The [Indigo Stats application repository](https://github.com/dbulnes/indigo-stats) contains the source code and detailed technical documentation.
