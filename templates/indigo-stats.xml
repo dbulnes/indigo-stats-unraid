@@ -18,10 +18,9 @@
   <WebUI>http://[IP]:[PORT:8000]/</WebUI>
   <Icon>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/icon.png</Icon>
   <TemplateURL>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/templates/indigo-stats.xml</TemplateURL>
-  <Beta>true</Beta>
   <License>Unlicense</License>
   <Date>2026-09-21</Date>
-  <Changes>Update overview description and dashboard screenshots.</Changes>
+  <Changes>Declare stable release: remove beta tag and update dashboard overview.</Changes>
   <ExtraParams>--init --read-only --tmpfs /tmp --cap-drop=ALL --cap-add=CHOWN --cap-add=DAC_OVERRIDE --cap-add=SETUID --cap-add=SETGID --security-opt=no-new-privileges:true --stop-timeout=35 --log-opt=max-size=5m --log-opt=max-file=3</ExtraParams>
   <Config Name="Web UI port" Target="8000" Default="8765" Mode="tcp" Description="HTTP port on the trusted LAN. Use a private HTTPS proxy for mobile PWA installation. The application has no login." Type="Port" Display="always" Required="true" Mask="false">8765</Config>
   <Config Name="Appdata" Target="/data" Default="/mnt/user/appdata/indigo-stats" Mode="rw" Description="Persistent SQLite database and local snapshots. Keep this directory when updating or replacing the container. Use local SSD-backed appdata, not SMB/NFS." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/indigo-stats</Config>

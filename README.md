@@ -16,8 +16,6 @@ Indigo Stats is a private air-quality and weather dashboard for a PurpleAir sens
 
 This repository provides the Unraid Community Applications package. The [Indigo Stats application repository](https://github.com/dbulnes/indigo-stats) contains the source code and detailed technical documentation.
 
-> **Beta:** Indigo Stats is under active development. Keep a backup before updating and report problems through the support links below.
-
 ## Features
 
 - Collects temperature, humidity, both PM2.5 channels, quality flags, and corrected PM2.5 directly from a PurpleAir sensor on the LAN.
