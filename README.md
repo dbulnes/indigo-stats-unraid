@@ -1,8 +1,5 @@
-# Indigo Stats for Unraid
-
-![Indigo Stats icon](https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/icon.png)
-
 [![Validate Unraid metadata](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml/badge.svg)](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml)
+# Indigo: Local PurpleAir Stats for Unraid
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/docs/screenshot_overview.png" alt="Indigo Stats Overview Dashboard" width="800"/>
