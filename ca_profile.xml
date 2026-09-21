@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommunityApplications>
+  <Profile>Unraid Community Applications packaging for Indigo Stats, a private dashboard for a local PurpleAir sensor. Application source and runtime documentation are maintained at https://github.com/dbulnes/indigo-stats. Packaging issues are tracked in this repository.</Profile>
+  <Icon>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/icon.png</Icon>
+  <WebPage>https://github.com/dbulnes/indigo-stats-unraid</WebPage>
+  <Forum>https://github.com/dbulnes/indigo-stats-unraid/issues</Forum>
+</CommunityApplications>
