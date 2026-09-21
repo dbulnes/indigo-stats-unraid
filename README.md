@@ -6,11 +6,13 @@ The application source, Dockerfile, tests, and release workflow live only in the
 
 ## Publication status
 
-This package is a pre-release draft. Do not submit it to Community Applications until `ghcr.io/dbulnes/indigo-stats:latest` is publicly pullable for `linux/amd64`, the template has passed Validate and Scan, and a support path has been reviewed.
+This package passed the Community Applications submission portal's Validate and Scan checks and was submitted for publication on September 20, 2026. The public `ghcr.io/dbulnes/indigo-stats:latest` image provides the supported `linux/amd64` runtime, and this repository is the canonical source for its Unraid metadata and support path.
 
-## Install for testing
+The template is currently marked beta because the `0.1.x` application is still under active development. The label can be removed when the application is ready to be presented as stable.
 
-Before a Community Applications listing exists, use Unraid Docker → Add Container and reproduce the settings in [`templates/indigo-stats.xml`](templates/indigo-stats.xml). When the image and this repository are public, the raw template URL can also be used by tooling that supports external templates:
+## Installation
+
+In Unraid, open **Apps**, search for **Indigo Stats**, review the configuration, and select **Install**. The canonical template is [`templates/indigo-stats.xml`](templates/indigo-stats.xml), and its public raw URL can also be used by tooling that supports external templates:
 
 ```text
 https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/templates/indigo-stats.xml
@@ -58,11 +60,8 @@ Application behavior and image problems belong in the [Indigo Stats application 
 
 The template repository is MIT licensed. The underlying Indigo Stats application remains under its own [Unlicense](https://github.com/dbulnes/indigo-stats/blob/main/LICENSE).
 
-## Community Applications submission checklist
+## Community Applications maintenance
 
-1. Push a reviewed version tag in the application repository. GitHub Actions publishes the `linux/amd64` image to GHCR with its built-in `GITHUB_TOKEN`; no external registry credentials are stored.
-2. Make the first GHCR package public, then verify an anonymous `docker pull ghcr.io/dbulnes/indigo-stats:latest` and confirm the manifest contains `linux/amd64`.
-3. Recreate the container with retained appdata and verify health, history, collection, backup integrity, and clean shutdown.
-4. Confirm that every template URL and icon URL resolves publicly.
-5. Use the [Community Apps submission portal](https://ca.unraid.net/submit), then run both Validate and Scan and resolve every finding.
-6. Submit for moderator review. Adding XML to GitHub does not itself create a listing.
+Application-only releases are published from the application repository and do not require a template edit because the listing tracks `ghcr.io/dbulnes/indigo-stats:latest`. Before publishing one, verify the anonymous AMD64 pull, retained appdata, health, history, collection, backup integrity, and clean shutdown.
+
+When installation metadata changes, update this repository's template, `Date`, and `Changes`; run `python3 scripts/validate.py`; push the change; and rerun the Community Applications portal's Validate and Scan checks. Keep every template and icon URL publicly accessible.

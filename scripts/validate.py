@@ -15,6 +15,14 @@ assert template.findtext("Repository") == "ghcr.io/dbulnes/indigo-stats:latest"
 assert template.findtext("WebUI") == "http://[IP]:[PORT:8000]/"
 assert template.findtext("Privileged") == "false"
 
+readme = (root / "README.md").read_text()
+for stale_phrase in (
+    "pre-release draft",
+    "Do not submit it to Community Applications",
+    "Before a Community Applications listing exists",
+):
+    assert stale_phrase not in readme, f"stale pre-submission README text: {stale_phrase}"
+
 fields = {item.attrib["Target"]: item for item in template.findall("Config")}
 for target in ("8000", "/data", "SENSOR_HOST", "TZ", "PM_METHOD", "ENVIRONMENT_MODE", "FORECAST_ENABLED", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "PUID", "PGID"):
     assert target in fields, f"missing Config for {target}"
