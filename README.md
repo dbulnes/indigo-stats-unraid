@@ -44,7 +44,7 @@ Local snapshots remain on the same storage and are not an off-server backup. See
 
 ## Container review notes
 
-- Architectures: `linux/amd64` is required for Unraid; the same Dockerfile also builds `linux/arm64`.
+- Architectures: the published Unraid image is `linux/amd64`. The same Dockerfile builds `linux/arm64` locally for Apple Silicon testing, but that image is not published.
 - Network: bridge mode; inbound TCP `8000`; local HTTP access to the configured sensor; optional outbound HTTPS to Open-Meteo.
 - Storage: one read-write `/data` mount; root filesystem is read-only; `/tmp` is tmpfs.
 - Privileges: privileged mode, host networking, Docker socket, host devices, and host service changes are not used.
@@ -60,7 +60,7 @@ The template repository is MIT licensed. The underlying Indigo Stats application
 
 ## Community Applications submission checklist
 
-1. Publish an anonymous, multi-architecture image with a working `latest` tag.
+1. Publish an anonymous `linux/amd64` image with a working `latest` tag.
 2. Verify an anonymous `docker pull davidbulnes/indigo-stats:latest` and confirm the manifest contains `linux/amd64`.
 3. Recreate the container with retained appdata and verify health, history, collection, backup integrity, and clean shutdown.
 4. Confirm that every template URL and icon URL resolves publicly.
