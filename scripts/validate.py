@@ -16,12 +16,23 @@ assert template.findtext("WebUI") == "http://[IP]:[PORT:8000]/"
 assert template.findtext("Privileged") == "false"
 
 readme = (root / "README.md").read_text()
-for stale_phrase in (
+for maintainer_only_phrase in (
     "pre-release draft",
     "Do not submit it to Community Applications",
     "Before a Community Applications listing exists",
+    "submission portal",
+    "Validate and Scan",
+    "Community Applications maintenance",
 ):
-    assert stale_phrase not in readme, f"stale pre-submission README text: {stale_phrase}"
+    assert maintainer_only_phrase not in readme, f"maintainer-only README text: {maintainer_only_phrase}"
+for heading in (
+    "## Features",
+    "## Installation",
+    "## Configuration",
+    "## Updates and data safety",
+    "## Support and source",
+):
+    assert heading in readme, f"missing public README section: {heading}"
 
 fields = {item.attrib["Target"]: item for item in template.findall("Config")}
 for target in ("8000", "/data", "SENSOR_HOST", "TZ", "PM_METHOD", "ENVIRONMENT_MODE", "FORECAST_ENABLED", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "PUID", "PGID"):

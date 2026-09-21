@@ -1,67 +1,80 @@
 # Indigo Stats for Unraid
 
-This repository contains the Unraid Community Applications metadata for [Indigo Stats](https://github.com/dbulnes/indigo-stats), a private dashboard that polls a PurpleAir sensor on the local network and stores minute-level temperature, humidity, PM2.5, US AQI, and history.
+![Indigo Stats icon](https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/icon.png)
 
-The application source, Dockerfile, tests, and release workflow live only in the application repository. This repository contains only the Unraid template, repository profile, icon, and packaging documentation.
+[![Validate Unraid metadata](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml/badge.svg)](https://github.com/dbulnes/indigo-stats-unraid/actions/workflows/validate.yml)
 
-## Publication status
+Indigo Stats is a private air-quality and weather dashboard for a PurpleAir sensor on your local network. It collects readings every minute, keeps long-term history on your Unraid server, and presents current conditions and trends in a responsive web app that can be installed as a PWA.
 
-This package passed the Community Applications submission portal's Validate and Scan checks and was submitted for publication on September 20, 2026. The public `ghcr.io/dbulnes/indigo-stats:latest` image provides the supported `linux/amd64` runtime, and this repository is the canonical source for its Unraid metadata and support path.
+This repository provides the Unraid Community Applications package. The [Indigo Stats application repository](https://github.com/dbulnes/indigo-stats) contains the source code and detailed technical documentation.
 
-The template is currently marked beta because the `0.1.x` application is still under active development. The label can be removed when the application is ready to be presented as stable.
+> **Beta:** Indigo Stats is under active development. Keep a backup before updating and report problems through the support links below.
+
+## Features
+
+- Collects temperature, humidity, both PM2.5 channels, quality flags, and corrected PM2.5 directly from a PurpleAir sensor on the LAN.
+- Calculates US AQI estimates with EPA 2024 breakpoints and displays PM2.5 NowCast after enough complete hourly history is available.
+- Makes historical exploration easy with date ranges, time navigation, previous-period overlays, threshold inspection, daily patterns, and CSV export.
+- Optionally compares local readings with hourly regional weather and PM2.5 forecasts from Open-Meteo.
+- Shows collector, forecast, database, backup, and storage health.
+- Stores state in SQLite under persistent Unraid appdata and creates consistent daily snapshots.
+- Provides an installable React/TypeScript PWA from the same container.
+
+## Requirements
+
+- An AMD64 Unraid server.
+- A PurpleAir sensor reachable from the container over the same private network.
+- A dedicated local appdata directory for the SQLite database and backups.
+- Optional outbound HTTPS access and coordinates if regional forecasts are enabled.
+
+Indigo Stats has no application login. Keep it on a trusted LAN or private tailnet and do not expose it directly to the internet. PWA installation on mobile devices normally requires HTTPS through a private reverse proxy or Tailscale Serve configured separately.
 
 ## Installation
 
-In Unraid, open **Apps**, search for **Indigo Stats**, review the configuration, and select **Install**. The canonical template is [`templates/indigo-stats.xml`](templates/indigo-stats.xml), and its public raw URL can also be used by tooling that supports external templates:
+1. Open the **Apps** tab in Unraid and search for **Indigo Stats**.
+2. Select **Install**.
+3. Enter the PurpleAir sensor's private IPv4 address and your IANA timezone.
+4. Review the PM2.5 and temperature/humidity display methods.
+5. To enable forecasts, turn them on and provide both latitude and longitude. Otherwise, leave forecasts disabled and both coordinates empty.
+6. Apply the template, wait for the container to become healthy, and open **WebUI**.
 
-```text
-https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/templates/indigo-stats.xml
-```
-
-The application exposes container port `8000`; the template maps host port `8765` by default. The WebUI entry uses `[PORT:8000]`, allowing Unraid to resolve a changed host-side port correctly.
+The template maps container port `8000` to host port `8765` by default. You may choose another available host port. The [container template](https://github.com/dbulnes/indigo-stats-unraid/blob/main/templates/indigo-stats.xml) tracks the latest published AMD64 image at `ghcr.io/dbulnes/indigo-stats:latest`.
 
 ## Configuration
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| Web UI port | `8765` | Trusted-LAN HTTP access to container port `8000` |
-| Appdata | `/mnt/user/appdata/indigo-stats` | Persistent SQLite database and local snapshots mounted at `/data` |
-| PurpleAir sensor IP | none; required | Private IPv4 address of the local sensor |
+| Web UI port | `8765` | Trusted-network HTTP access to the dashboard |
+| Appdata | `/mnt/user/appdata/indigo-stats` | Persistent database, settings, and local snapshots mounted at `/data` |
+| PurpleAir sensor IP | Required | Private IPv4 address of the local sensor |
 | Timezone | `Etc/UTC` | IANA timezone used in charts |
-| PM2.5 method | `cf1` | Raw channel average or the EPA 2021 outdoor correction |
+| PM2.5 method | `cf1` | Raw channel average or EPA 2021 outdoor correction |
 | Temperature and humidity | `purpleair` | PurpleAir estimated, raw operating, or simple adjusted display |
-| Forecasts | disabled | Optional Open-Meteo weather and regional PM2.5 forecasts |
-| Forecast coordinates | empty | Required as a pair when forecasts are enabled; masked in the template |
-| PUID / PGID | `99` / `100` | Unraid user and group used after initialization |
+| Regional forecasts | Disabled | Optional Open-Meteo weather and PM2.5 forecasts |
+| Forecast coordinates | Empty | Required as a pair when forecasts are enabled |
+| PUID / PGID | `99` / `100` | Unraid user and group used by the application |
 
-The application has no login. Keep it on a trusted LAN or private tailnet and do not expose it directly to the internet. Configure HTTPS separately if mobile PWA installation is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled. No street address is needed or exposed by this template.
+No street address or API credential is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled and are not returned by dashboard APIs.
 
-## Persistence, upgrades, and removal
+## History, persistence, and backups
 
-All mutable state is under `/data`. Container replacement or image updates preserve history when the same appdata mapping is retained. Never map the live SQLite database to SMB/NFS. Do not run two application containers against one data directory because both would start collectors.
+All mutable state is stored under `/data`. Unraid container updates preserve readings and settings as long as the same appdata path remains mapped to `/data`. Removing the container does not remove appdata unless you explicitly delete that directory.
 
-Before upgrades, stop the container and make a consistent application backup with the current image. Keep the old image and backup until the new container has retained history and collected a new sample. Removing the container does not require removing appdata; deleting appdata permanently removes readings, settings, and local snapshots.
+Minute-level readings are retained indefinitely by default. Raw sensor payloads expire after 30 days. The application creates daily SQLite snapshots and retains the latest 14 on the same appdata volume. These snapshots help with some application or operator mistakes, but they do not protect against loss of the Unraid server or its storage.
 
-Local snapshots remain on the same storage and are not an off-server backup. See the [application operations guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/operations.md) for backup and restore details.
+Use local SSD-backed appdata for the live SQLite database. Do not place it on SMB or NFS, and do not run two Indigo Stats containers against the same data directory.
 
-## Container review notes
+## Updates and data safety
 
-- Architectures: the published Unraid image is `linux/amd64`. The same Dockerfile builds `linux/arm64` locally for Apple Silicon testing, but that image is not published.
-- Network: bridge mode; inbound TCP `8000`; local HTTP access to the configured sensor; optional outbound HTTPS to Open-Meteo.
-- Storage: one read-write `/data` mount; root filesystem is read-only; `/tmp` is tmpfs.
-- Privileges: privileged mode, host networking, Docker socket, host devices, and host service changes are not used.
-- Capabilities: all are dropped, then `CHOWN`, `DAC_OVERRIDE`, `SETUID`, and `SETGID` are added solely so the entrypoint can initialize the dedicated appdata directory and drop to PUID/PGID.
-- Secrets: there are no API credentials. Optional coordinates are masked because they are private location data.
-- Shutdown: Uvicorn handles SIGTERM; the template allows a 35-second stop timeout.
+Apply normal image updates from Unraid's Docker or Apps interface. An update replaces the container image while retaining the `/data` mapping; it must not delete or replace the existing appdata directory.
 
-## Updates and support
+Before an update, keep a consistent backup and the previous image until you confirm that the new container shows the existing history and collects a new sample. See the [operations guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/operations.md) for backup, upgrade, restore, HTTPS, and troubleshooting details.
 
-Application behavior and image problems belong in the [Indigo Stats application repository](https://github.com/dbulnes/indigo-stats/issues). Unraid template and Community Applications packaging problems belong in this repository's issue tracker.
+## Support and source
 
-The template repository is MIT licensed. The underlying Indigo Stats application remains under its own [Unlicense](https://github.com/dbulnes/indigo-stats/blob/main/LICENSE).
+- For dashboard behavior, collection, forecasts, database, or image problems, use the [Indigo Stats issue tracker](https://github.com/dbulnes/indigo-stats/issues).
+- For Unraid installation or template problems, use the [Unraid package issue tracker](https://github.com/dbulnes/indigo-stats-unraid/issues).
+- Application source and releases: [dbulnes/indigo-stats](https://github.com/dbulnes/indigo-stats)
+- Published container image: [GitHub Container Registry](https://github.com/dbulnes/indigo-stats/pkgs/container/indigo-stats)
 
-## Community Applications maintenance
-
-Application-only releases are published from the application repository and do not require a template edit because the listing tracks `ghcr.io/dbulnes/indigo-stats:latest`. Before publishing one, verify the anonymous AMD64 pull, retained appdata, health, history, collection, backup integrity, and clean shutdown.
-
-When installation metadata changes, update this repository's template, `Date`, and `Changes`; run `python3 scripts/validate.py`; push the change; and rerun the Community Applications portal's Validate and Scan checks. Keep every template and icon URL publicly accessible.
+The Unraid package metadata is MIT licensed. The Indigo Stats application uses the [Unlicense](https://github.com/dbulnes/indigo-stats/blob/main/LICENSE).
