@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Container version="2">
   <Name>Indigo Stats</Name>
-  <Repository>davidbulnes/indigo-stats:latest</Repository>
-  <Registry>https://hub.docker.com/r/davidbulnes/indigo-stats</Registry>
+  <Repository>ghcr.io/dbulnes/indigo-stats:latest</Repository>
+  <Registry>https://github.com/dbulnes/indigo-stats/pkgs/container/indigo-stats</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>

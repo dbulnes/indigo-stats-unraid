@@ -11,7 +11,7 @@ assert template.tag == "Container" and template.attrib.get("version") == "2"
 required = ("Name", "Repository", "Registry", "Network", "Privileged", "Support", "Project", "Overview", "WebUI", "Icon", "TemplateURL")
 for tag in required:
     assert (template.findtext(tag) or "").strip(), f"missing {tag}"
-assert template.findtext("Repository") == "davidbulnes/indigo-stats:latest"
+assert template.findtext("Repository") == "ghcr.io/dbulnes/indigo-stats:latest"
 assert template.findtext("WebUI") == "http://[IP]:[PORT:8000]/"
 assert template.findtext("Privileged") == "false"
 

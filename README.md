@@ -6,7 +6,7 @@ The application source, Dockerfile, tests, and release workflow live only in the
 
 ## Publication status
 
-This package is a pre-release draft. Do not submit it to Community Applications until `davidbulnes/indigo-stats:latest` is publicly pullable for `linux/amd64`, the template has passed Validate and Scan, and a support path has been reviewed.
+This package is a pre-release draft. Do not submit it to Community Applications until `ghcr.io/dbulnes/indigo-stats:latest` is publicly pullable for `linux/amd64`, the template has passed Validate and Scan, and a support path has been reviewed.
 
 ## Install for testing
 
@@ -60,8 +60,8 @@ The template repository is MIT licensed. The underlying Indigo Stats application
 
 ## Community Applications submission checklist
 
-1. Publish an anonymous `linux/amd64` image with a working `latest` tag.
-2. Verify an anonymous `docker pull davidbulnes/indigo-stats:latest` and confirm the manifest contains `linux/amd64`.
+1. Push a reviewed version tag in the application repository. GitHub Actions publishes the `linux/amd64` image to GHCR with its built-in `GITHUB_TOKEN`; no external registry credentials are stored.
+2. Make the first GHCR package public, then verify an anonymous `docker pull ghcr.io/dbulnes/indigo-stats:latest` and confirm the manifest contains `linux/amd64`.
 3. Recreate the container with retained appdata and verify health, history, collection, backup integrity, and clean shutdown.
 4. Confirm that every template URL and icon URL resolves publicly.
 5. Use the [Community Apps submission portal](https://ca.unraid.net/submit), then run both Validate and Scan and resolve every finding.
