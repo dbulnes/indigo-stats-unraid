@@ -55,15 +55,20 @@ The template maps container port `8000` to host port `8765` by default. You may 
 | Temperature and humidity | `purpleair` | PurpleAir estimated, raw operating, or simple adjusted display |
 | Regional forecasts | Disabled | Optional Open-Meteo weather and PM2.5 forecasts |
 | Forecast coordinates | Empty | Required as a pair when forecasts are enabled |
-| PUID / PGID | `99` / `100` | Unraid user and group used by the application |
+| PUID / PGID | `99` / `100` | Unraid user and group used by the application (under Advanced View) |
+| Offsite backup mount | Empty | Optional host directory or NFS/SMB share mounted at `/offsite` (under Advanced View) |
+| Google OAuth Client ID / Secret / Callback | Empty | Optional credentials for Google Drive backups (under Advanced View) |
+| S3 Access Key ID / Secret Key | Empty | Optional credentials for S3, Cloudflare R2, or MinIO backups (under Advanced View) |
 
-No street address or API credential is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled and are not returned by dashboard APIs.
+No street address or API credential is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled and are not returned by dashboard APIs. Offsite backup credentials remain optional and isolated.
 
 ## History, persistence, and backups
 
 All mutable state is stored under `/data`. Unraid container updates preserve readings and settings as long as the same appdata path remains mapped to `/data`. Removing the container does not remove appdata unless you explicitly delete that directory.
 
 Minute-level readings are retained indefinitely by default. Raw sensor payloads expire after 30 days. The application creates daily SQLite snapshots and retains the latest 14 on the same appdata volume. These snapshots help with some application or operator mistakes, but they do not protect against loss of the Unraid server or its storage.
+
+For off-server copies, Indigo Stats supports Google Drive, S3 / S3-compatible storage (Cloudflare R2, MinIO, Backblaze B2), and local mounted filesystems (NFS/SMB). See the [Google Drive setup guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/google-drive-backup-setup.md), [S3 setup guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/s3-backup-setup.md), and [operations guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/operations.md#off-server-backups).
 
 Use local SSD-backed appdata for the live SQLite database. Do not place it on SMB or NFS, and do not run two Indigo Stats containers against the same data directory.
 

@@ -35,11 +35,11 @@ for heading in (
     assert heading in readme, f"missing public README section: {heading}"
 
 fields = {item.attrib["Target"]: item for item in template.findall("Config")}
-for target in ("8000", "/data", "SENSOR_HOST", "TZ", "PM_METHOD", "ENVIRONMENT_MODE", "FORECAST_ENABLED", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "PUID", "PGID"):
+for target in ("8000", "/data", "SENSOR_HOST", "TZ", "PM_METHOD", "ENVIRONMENT_MODE", "FORECAST_ENABLED", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "PUID", "PGID", "/offsite", "BACKUP_GOOGLE_CLIENT_ID", "BACKUP_GOOGLE_CLIENT_SECRET", "BACKUP_GOOGLE_CALLBACK_URI", "BACKUP_S3_ACCESS_KEY_ID", "BACKUP_S3_SECRET_ACCESS_KEY"):
     assert target in fields, f"missing Config for {target}"
-for target in ("SENSOR_HOST", "FORECAST_LATITUDE", "FORECAST_LONGITUDE"):
+for target in ("SENSOR_HOST", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "/offsite", "BACKUP_GOOGLE_CLIENT_ID", "BACKUP_GOOGLE_CLIENT_SECRET", "BACKUP_GOOGLE_CALLBACK_URI", "BACKUP_S3_ACCESS_KEY_ID", "BACKUP_S3_SECRET_ACCESS_KEY"):
     assert not (fields[target].text or "").strip(), f"private default set for {target}"
-for target in ("FORECAST_LATITUDE", "FORECAST_LONGITUDE"):
+for target in ("FORECAST_LATITUDE", "FORECAST_LONGITUDE", "BACKUP_GOOGLE_CLIENT_SECRET", "BACKUP_S3_SECRET_ACCESS_KEY"):
     assert fields[target].attrib.get("Mask") == "true"
 
 forbidden_values = tuple(bytes.fromhex(value) for value in (

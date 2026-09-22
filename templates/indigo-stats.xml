@@ -20,7 +20,7 @@
   <TemplateURL>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/templates/indigo-stats.xml</TemplateURL>
   <License>Unlicense</License>
   <Date>2026-09-21</Date>
-  <Changes>Declare stable release: remove beta tag and update dashboard overview.</Changes>
+  <Changes>Add advanced configuration for off-server backups: NFS/SMB mount (/offsite), Google Drive OAuth credentials, and S3 access keys.</Changes>
   <ExtraParams>--init --read-only --tmpfs /tmp --cap-drop=ALL --cap-add=CHOWN --cap-add=DAC_OVERRIDE --cap-add=SETUID --cap-add=SETGID --security-opt=no-new-privileges:true --stop-timeout=35 --log-opt=max-size=5m --log-opt=max-file=3</ExtraParams>
   <Config Name="Web UI port" Target="8000" Default="8765" Mode="tcp" Description="HTTP port on the trusted LAN. Use a private HTTPS proxy for mobile PWA installation. The application has no login." Type="Port" Display="always" Required="true" Mask="false">8765</Config>
   <Config Name="Appdata" Target="/data" Default="/mnt/user/appdata/indigo-stats" Mode="rw" Description="Persistent SQLite database and local snapshots. Keep this directory when updating or replacing the container. Use local SSD-backed appdata, not SMB/NFS." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/indigo-stats</Config>
@@ -33,4 +33,10 @@
   <Config Name="Forecast longitude" Target="FORECAST_LONGITUDE" Default="" Mode="" Description="Optional private longitude from -180 to 180. Coordinates are not returned by browser APIs." Type="Variable" Display="always" Required="false" Mask="true"/>
   <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="UID used by the application after startup. Unraid nobody is normally 99." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
   <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="GID used by the application after startup. Unraid users is normally 100." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="Offsite backup mount" Target="/offsite" Default="" Mode="rw" Description="Optional host directory or mounted NFS/SMB share for off-server backups. Must be a distinct mount from /data." Type="Path" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Google OAuth Client ID" Target="BACKUP_GOOGLE_CLIENT_ID" Default="" Mode="" Description="Optional Google OAuth 2.0 Web Client ID for Google Drive backups." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Google OAuth Client Secret" Target="BACKUP_GOOGLE_CLIENT_SECRET" Default="" Mode="" Description="Optional Google OAuth 2.0 Client Secret for Google Drive backups." Type="Variable" Display="advanced" Required="false" Mask="true"/>
+  <Config Name="Google OAuth Callback URI" Target="BACKUP_GOOGLE_CALLBACK_URI" Default="" Mode="" Description="Optional exact OAuth callback URI registered in Google Cloud Console (e.g. https://your-domain/api/backups/google/callback)." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="S3 Access Key ID" Target="BACKUP_S3_ACCESS_KEY_ID" Default="" Mode="" Description="Optional AWS or S3-compatible Access Key ID for off-server backups." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="S3 Secret Access Key" Target="BACKUP_S3_SECRET_ACCESS_KEY" Default="" Mode="" Description="Optional AWS or S3-compatible Secret Access Key for off-server backups." Type="Variable" Display="advanced" Required="false" Mask="true"/>
 </Container>
