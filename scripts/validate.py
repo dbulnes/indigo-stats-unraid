@@ -35,6 +35,30 @@ for heading in (
     assert heading in readme, f"missing public README section: {heading}"
 
 fields = {item.attrib["Target"]: item for item in template.findall("Config")}
+for target, display in (("CLOTHING_JEVMODEL_API_KEY", "always"), ("CLOTHING_TYPESAFE_API_KEY", "advanced")):
+    assert target in fields, f"missing clothing credential Config: {target}"
+    field = fields[target]
+    assert field.attrib.get("Type") == "Variable"
+    assert field.attrib.get("Mask") == "true", f"unmasked credential: {target}"
+    assert field.attrib.get("Required") == "false", f"clothing credentials must be optional: {target}"
+    assert field.attrib.get("Display") == display
+    assert not field.attrib.get("Default") and not (field.text or "").strip(), f"private default set for {target}"
+    assert target in readme, f"missing clothing credential documentation: {target}"
+for requirement in (
+    "## Optional clothing recommendations",
+    "manual-only",
+    "explicit consent",
+    "possible API spend",
+    "https://jevmodel.org/v1/systemone",
+    "jev-latest",
+    "masked Unraid template inputs",
+    "No separate key file is required",
+    "does not encrypt it",
+    "administrators can inspect the Docker container environment",
+    "Application SQLite backups exclude these environment credentials",
+    "No new mounts or ports",
+):
+    assert requirement in readme, f"missing clothing setup/privacy documentation: {requirement}"
 for target in ("8000", "/data", "SENSOR_HOST", "TZ", "PM_METHOD", "ENVIRONMENT_MODE", "FORECAST_ENABLED", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "PUID", "PGID", "/offsite", "BACKUP_GOOGLE_CLIENT_ID", "BACKUP_GOOGLE_CLIENT_SECRET", "BACKUP_GOOGLE_CALLBACK_URI", "BACKUP_S3_ACCESS_KEY_ID", "BACKUP_S3_SECRET_ACCESS_KEY"):
     assert target in fields, f"missing Config for {target}"
 for target in ("SENSOR_HOST", "FORECAST_LATITUDE", "FORECAST_LONGITUDE", "/offsite", "BACKUP_GOOGLE_CLIENT_ID", "BACKUP_GOOGLE_CLIENT_SECRET", "BACKUP_GOOGLE_CALLBACK_URI", "BACKUP_S3_ACCESS_KEY_ID", "BACKUP_S3_SECRET_ACCESS_KEY"):

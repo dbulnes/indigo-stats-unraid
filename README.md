@@ -59,8 +59,25 @@ The template maps container port `8000` to host port `8765` by default. You may 
 | Offsite backup mount | Empty | Optional host directory or NFS/SMB share mounted at `/offsite` (under Advanced View) |
 | Google OAuth Client ID / Secret / Callback | Empty | Optional credentials for Google Drive backups (under Advanced View) |
 | S3 Access Key ID / Secret Key | Empty | Optional credentials for S3, Cloudflare R2, or MinIO backups (under Advanced View) |
+| Clothing provider and cache | Manual-only | Provider selection and cached results persist in SQLite; configure in the app, not template variables |
+| jevmodel.org API key | Empty | Optional masked `CLOTHING_JEVMODEL_API_KEY` for manual clothing recommendations |
+| TypeSafe API key | Empty | Optional masked `CLOTHING_TYPESAFE_API_KEY` for direct TypeSafe requests (under Advanced View) |
 
 No street address or API credential is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled and are not returned by dashboard APIs. Offsite backup credentials remain optional and isolated.
+
+## Optional clothing recommendations
+
+Clothing recommendations are manual-only and require explicit consent to sending weather context and possible API spend. Opening or refreshing the dashboard does not trigger paid requests. The initial provider is **jevmodel.org**, an independent service at `https://jevmodel.org/v1/systemone` using `jev-latest`, not TypeSafe. Enter provider keys only in the masked Unraid template inputs, not the Indigo Stats dashboard.
+
+Recent PurpleAir readings and existing forecasts supply context; Jev does not predict weather. Local periods are 06:00–11:00, 11:00–17:00, and 17:00–23:00; ended periods are skipped. Each eligible period uses five Choice questions for relative preference (bottoms, base top, midlayer, outerwear, footwear) and three Noul questions for estimated usefulness (umbrella, beanie, gloves). Layers are independently judged, not a coherent outfit.
+
+In **Docker → Indigo Stats → Edit**, enter the **jevmodel.org API key** or the optional **TypeSafe API key** under Advanced View, then click **Apply**. The backend reads the corresponding environment variable from the configuration table. No separate key file is required. No new mounts or ports are needed; retain the existing `/data` mapping when Unraid recreates the container. If an older saved template lacks the field, add a masked Variable with the exact name above; use an application image that includes this feature. See the [setup and usage guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/clothing-recommendations.md).
+
+Masking hides the value in the Unraid UI; it does not encrypt it. Unraid stores keys in its saved container template, and administrators can inspect the Docker container environment. Protect host templates and their backups. Never share keys in logs, chat, screenshots, public template exports, or Docker inspection output. Indigo Stats does not store these keys in SQLite or expose them through its own APIs.
+
+Actual token usage is reported when supplied by the provider; no measured live usage is available yet. The earlier 3,000–6,000 input tokens across three full-day calls figure is only a prior estimate, not a bill or spending limit. Review provider prices before requesting. Weather context leaves your server when you authorize a request; restrict app access to trusted clients.
+
+Application SQLite backups exclude these environment credentials, including off-server copies of those backups. Re-enter the keys in the container template after a database-only recovery. Host-level backups of templates or Docker configuration can include keys and need separate protection.
 
 ## History, persistence, and backups
 
