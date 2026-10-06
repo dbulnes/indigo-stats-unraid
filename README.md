@@ -69,6 +69,13 @@ No street address or API credential is required. Forecast coordinates are sent t
 
 Clothing recommendations are manual-only and require explicit consent to sending weather context and possible API spend. Opening or refreshing the dashboard does not trigger paid requests. The initial provider is **jevmodel.org**, an independent service at `https://jevmodel.org/v1/systemone` using `jev-latest`, not TypeSafe. Enter provider keys only in the masked Unraid template inputs, not the Indigo Stats dashboard.
 
+In the configured timezone, 23:00 rolls recommendations to tomorrow's daytime
+periods (06:00–11:00, 11:00–17:00, 17:00–23:00). Midnight through 05:59 keeps
+those same upcoming periods on the current date. During daytime, completed
+periods are skipped. Complete, fresh forecasts for the selected day are required;
+matching fresh cached recommendations can be reused across midnight. This
+behavior adds no configuration, mounts, ports, or automatic paid requests.
+
 Recent PurpleAir readings and existing forecasts supply context; Jev does not predict weather. Local periods are 06:00–11:00, 11:00–17:00, and 17:00–23:00; ended periods are skipped. Each eligible period uses five Choice questions for relative preference (bottoms, base top, midlayer, outerwear, footwear) and three Noul questions for estimated usefulness (umbrella, beanie, gloves). Layers are independently judged, not a coherent outfit.
 
 In **Docker → Indigo Stats → Edit**, enter the **jevmodel.org API key** or the optional **TypeSafe API key** under Advanced View, then click **Apply**. The backend reads the corresponding environment variable from the configuration table. No separate key file is required. No new mounts or ports are needed; retain the existing `/data` mapping when Unraid recreates the container. If an older saved template lacks the field, add a masked Variable with the exact name above; use an application image that includes this feature. See the [setup and usage guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/clothing-recommendations.md).
