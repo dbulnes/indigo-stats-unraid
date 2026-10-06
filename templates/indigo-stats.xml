@@ -19,8 +19,8 @@
   <Icon>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/icon.png</Icon>
   <TemplateURL>https://raw.githubusercontent.com/dbulnes/indigo-stats-unraid/main/templates/indigo-stats.xml</TemplateURL>
   <License>Unlicense</License>
-  <Date>2026-09-21</Date>
-  <Changes>Add advanced configuration for off-server backups: NFS/SMB mount (/offsite), Google Drive OAuth credentials, and S3 access keys.</Changes>
+  <Date>2026-10-06</Date>
+  <Changes>Add optional masked jevmodel.org and TypeSafe API key inputs for manual clothing recommendations in Indigo Stats 0.9.0. Credentials are supplied through the container environment.</Changes>
   <ExtraParams>--init --read-only --tmpfs /tmp --cap-drop=ALL --cap-add=CHOWN --cap-add=DAC_OVERRIDE --cap-add=SETUID --cap-add=SETGID --security-opt=no-new-privileges:true --stop-timeout=35 --log-opt=max-size=5m --log-opt=max-file=3</ExtraParams>
   <Config Name="Web UI port" Target="8000" Default="8765" Mode="tcp" Description="HTTP port on the trusted LAN. Use a private HTTPS proxy for mobile PWA installation. The application has no login." Type="Port" Display="always" Required="true" Mask="false">8765</Config>
   <Config Name="Appdata" Target="/data" Default="/mnt/user/appdata/indigo-stats" Mode="rw" Description="Persistent SQLite database and local snapshots. Keep this directory when updating or replacing the container. Use local SSD-backed appdata, not SMB/NFS." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/indigo-stats</Config>
@@ -31,6 +31,8 @@
   <Config Name="Enable regional forecasts" Target="FORECAST_ENABLED" Default="false|true" Mode="" Description="Enable only after supplying both coordinates. Coordinates are sent to Open-Meteo for regional weather and PM2.5 forecasts." Type="Variable" Display="always" Required="true" Mask="false">false</Config>
   <Config Name="Forecast latitude" Target="FORECAST_LATITUDE" Default="" Mode="" Description="Optional private latitude from -90 to 90. Enter both coordinates or leave both blank." Type="Variable" Display="always" Required="false" Mask="true"/>
   <Config Name="Forecast longitude" Target="FORECAST_LONGITUDE" Default="" Mode="" Description="Optional private longitude from -180 to 180. Coordinates are not returned by browser APIs." Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="jevmodel.org API key" Target="CLOTHING_JEVMODEL_API_KEY" Default="" Mode="" Description="Optional jevmodel.org key for manual clothing recommendations. Leave blank if unused. Masking hides the value in the UI; Unraid stores it in the saved template and container environment." Type="Variable" Display="always" Required="false" Mask="true"/>
+  <Config Name="TypeSafe API key" Target="CLOTHING_TYPESAFE_API_KEY" Default="" Mode="" Description="Optional TypeSafe key for manual clothing recommendations with the TypeSafe provider. Separate from a jevmodel.org key. Masking hides the value in the UI; Unraid stores it in the saved template and container environment." Type="Variable" Display="advanced" Required="false" Mask="true"/>
   <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="UID used by the application after startup. Unraid nobody is normally 99." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
   <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="GID used by the application after startup. Unraid users is normally 100." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
   <Config Name="Offsite backup mount" Target="/offsite" Default="" Mode="rw" Description="Optional host directory or mounted NFS/SMB share for off-server backups. Must be a distinct mount from /data." Type="Path" Display="advanced" Required="false" Mask="false"/>

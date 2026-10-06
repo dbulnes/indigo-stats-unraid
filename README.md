@@ -19,6 +19,7 @@ This repository provides the Unraid Community Applications package. The [Indigo 
 - Calculates US AQI estimates with EPA 2024 breakpoints and displays PM2.5 NowCast after enough complete hourly history is available.
 - Makes historical exploration easy with date ranges, time navigation, previous-period overlays, threshold inspection, daily patterns, and CSV export.
 - Optionally compares local readings with hourly regional weather and PM2.5 forecasts from Open-Meteo.
+- Optionally recommends generic clothing for morning, afternoon, and evening using jevmodel.org or TypeSafe. Generation is manual and results are cached for an hour.
 - Shows collector, forecast, database, backup, and storage health.
 - Stores state in SQLite under persistent Unraid appdata and creates consistent daily snapshots.
 - Provides an installable React/TypeScript PWA from the same container.
@@ -59,8 +60,16 @@ The template maps container port `8000` to host port `8765` by default. You may 
 | Offsite backup mount | Empty | Optional host directory or NFS/SMB share mounted at `/offsite` (under Advanced View) |
 | Google OAuth Client ID / Secret / Callback | Empty | Optional credentials for Google Drive backups (under Advanced View) |
 | S3 Access Key ID / Secret Key | Empty | Optional credentials for S3, Cloudflare R2, or MinIO backups (under Advanced View) |
+| jevmodel.org API key | Empty | Optional masked input for `CLOTHING_JEVMODEL_API_KEY`; supplies credentials for manual clothing recommendations |
+| TypeSafe API key | Empty | Optional masked input for `CLOTHING_TYPESAFE_API_KEY` (under Advanced View); uses a separate provider key and billing account |
 
 No street address or API credential is required. Forecast coordinates are sent to Open-Meteo only when forecasts are enabled and are not returned by dashboard APIs. Offsite backup credentials remain optional and isolated.
+
+Clothing recommendations are optional and require fresh regional forecasts, a provider key, and outbound HTTPS to the selected provider (`jevmodel.org` or `api.typesafe.ai`). Only compact weather summaries and generic clothing questions are sent; coordinates, sensor identity, and raw payloads are excluded. Enter your key in the masked **jevmodel.org API key** template field, or use **Advanced View → TypeSafe API key** for that provider, then click **Apply**. In the application's **Clothing** tab, choose the provider under **Setup / settings** and click **Generate** when ready to send weather context and spend credits. Opening the dashboard does not trigger paid requests.
+
+For an existing installation whose saved template lacks these fields, add an optional masked **Variable** named `CLOTHING_JEVMODEL_API_KEY` or `CLOTHING_TYPESAFE_API_KEY` with the key as its value, then apply the template using an image that supports clothing recommendations. Keep the existing appdata mapping.
+
+Masking hides keys in the Unraid UI; it does not encrypt them. Unraid stores them in its saved template and container environment, which administrators can inspect. Protect template exports and host backups. The application never accepts keys through the dashboard, returns them through browser APIs, or stores them in SQLite. Database backups exclude these credentials; keep a recovery copy in a password manager and supply them again after a database-only restore. See the [clothing setup guide](https://github.com/dbulnes/indigo-stats/blob/main/docs/clothing-recommendations.md).
 
 ## History, persistence, and backups
 
